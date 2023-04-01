@@ -1,3 +1,4 @@
+from django import forms
 from django.shortcuts import render
 
 # Create your views here.
@@ -5,16 +6,22 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+
+class SendCmdForm(forms.Form):
+    ipField = forms.CharField(max_length=512)
+    cmdField = forms.CharField(max_length=512, label='Команда')
+
+
 @csrf_exempt
 def my_view(request):
     if request.method == 'POST':
-        # Обрабатываем отправленную форму
-        form_data = request.POST
-        field1 = form_data.get('field1')
-        field2 = form_data.get('field2')
-        # Делаем что-то с полями (например, сохраняем их в базу данных)
-        return HttpResponse('Данные успешно отправлены!')
+        form = SendCmdForm(request.POST)
+        if form.is_valid():
+            ips = form.cleaned_data['ipField'].split()
+            cmd = form.cleaned_data['cmdField']
+            return HttpResponse(f"ips: <p>{ips}</p> <p>cmd {cmd}</p>")
+        else:
+            form = SendCmdForm()
     else:
-        # Выводим форму для заполнения с использованием Bootstrap
-        return render(request, 'home.html')
-
+        form = SendCmdForm()
+    return render(request, 'home.html', {'form': form})

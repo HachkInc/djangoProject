@@ -20,5 +20,5 @@ from app.views import my_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', my_view)
+    path('', my_view, name='send')
 ]

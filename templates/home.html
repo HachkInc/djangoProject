@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="container mt-5">
-  <form method="POST">
-    {% csrf_token %}
-    <div class="form-group">
-      <label for="field1">Поле 1:</label>
-      <input type="text" class="form-control" id="field1" name="field1">
+
+    <form action="{% url 'send' %}" methos="post"></form>
+        {% csrf_token %}
+        {{ form.as_p }}
+{#            <div class="form-group">#}
+{#                <label for="field1">Поле 1:</label>#}
+{#                <input type="text" class="form-control" id="ipField" name="field1">#}
+{#            </div>#}
+{#            <div class="form-group">#}
+{#                <label for="field2">Поле 2:</label>#}
+{#                <textarea class="form-control" id="exampleFormControlTextarea1" id="cmdField" rows="3"></textarea>#}
+{#            </div>#}
+        <button type="submit" class="btn btn-primary">Отправить</button>
+        </form>
     </div>
-    <div class="form-group">
-      <label for="field2">Поле 2:</label>
-      <input type="text" class="form-control" id="field2" name="field2">
-    </div>
-    <button type="submit" class="btn btn-primary">Отправить</button>
-  </form>
-</div>
 {% endblock %}
