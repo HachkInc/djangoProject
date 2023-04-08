@@ -10,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 class SendCmdForm(forms.Form):
     ipField = forms.CharField(max_length=512)
     cmdField = forms.CharField(max_length=512, label='Команда')
+    select_ssh = forms.ChoiceField(label='Select ssh:', choices=[('option1', 'Option 1'), ('option2', 'Option 2'),('option3', 'Option 3')])
 
 
 @csrf_exempt
