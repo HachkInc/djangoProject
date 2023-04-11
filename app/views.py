@@ -1,16 +1,16 @@
-from django import forms
-from django.shortcuts import render
+import os
 
-# Create your views here.
+from django import forms
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 
+from app.utils import send_command
+
 
 class SendCmdForm(forms.Form):
-    ipField = forms.CharField(max_length=512)
+    ipField = forms.CharField(max_length=512, label='Адреса серверов')
     cmdField = forms.CharField(max_length=512, label='Команда')
-    select_ssh = forms.ChoiceField(label='Select ssh:', choices=[('option1', 'Option 1'), ('option2', 'Option 2'),('option3', 'Option 3')])
 
 
 @csrf_exempt
@@ -18,9 +18,10 @@ def my_view(request):
     if request.method == 'POST':
         form = SendCmdForm(request.POST)
         if form.is_valid():
-            ips = form.cleaned_data['ipField'].split()
+            ips = form.cleaned_data['ipField'].split(",")
             cmd = form.cleaned_data['cmdField']
-            return HttpResponse(f"ips: <p>{ips}</p> <p>cmd {cmd}</p>")
+            res = send_command(hosts=ips, cmd=cmd)
+            return HttpResponse(f"ips: <p>{ips}</p> <p>cmd {cmd}</p> <p>cmd res: {res}</p>")
         else:
             form = SendCmdForm()
     else:
