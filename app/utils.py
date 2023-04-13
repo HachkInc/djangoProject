@@ -17,4 +17,4 @@ def send_command(hosts, cmd):
 
         result = stdout.channel.recv_exit_status()
         client.close()
-        return result
+    return result

@@ -9,8 +9,8 @@ from app.utils import send_command
 
 
 class SendCmdForm(forms.Form):
-    ipField = forms.CharField(max_length=512, label='Адреса серверов')
-    cmdField = forms.CharField(max_length=512, label='Команда')
+    ipField = forms.CharField(max_length=512, label='Адреса серверов', widget=forms.Textarea)
+    cmdField = forms.CharField(max_length=512, label='Команда', widget=forms.Textarea)
 
 
 @csrf_exempt
@@ -19,9 +19,11 @@ def my_view(request):
         form = SendCmdForm(request.POST)
         if form.is_valid():
             ips = form.cleaned_data['ipField'].split(",")
+            ips = [ip.replace("\r\n", "") for ip in ips]
             cmd = form.cleaned_data['cmdField']
             res = send_command(hosts=ips, cmd=cmd)
-            return HttpResponse(f"ips: <p>{ips}</p> <p>cmd {cmd}</p> <p>cmd res: {res}</p>")
+            data = {"res": res, "ips": ips, "cmd": cmd}
+            return render(request, template_name="output.html", context=data)
         else:
             form = SendCmdForm()
     else:
