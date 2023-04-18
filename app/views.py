@@ -22,9 +22,9 @@ def my_view(request):
             ips = [ip.replace("\r\n", "") for ip in ips]
             ips = [ip.replace(" ", "") for ip in ips]
             cmd = form.cleaned_data['cmdField']
-            res = []
+            res = {}
             for ip in ips:
-                res += send_command(host=ip, cmd=cmd)
+                res[ip] = send_command(host=ip, cmd=cmd)
             data = {"res": res, "ips": ips, "cmd": cmd}
             return render(request, template_name="output.html", context=data)
         else:

@@ -14,12 +14,12 @@ def send_command(host, cmd):
     key_filename = os.getenv("KEY_PATH")
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
     try:
-        client.connect(host, username=username, password=password, key_filename="/home/daniil/.ssh/id_rsa", timeout=10)
+        client.connect(host, username=username, password=password, key_filename=key_filename, timeout=10)
     except Exception as e:
         return f"Error {e} Invalid Ip {host}"
 
     if cmd in DANGEROUS_COMMANDS:
-        return "иди нахуй"
+        return "Inputed command blocked by developers"
     stdin, stdout, stderr = client.exec_command(cmd)
 
     result = stdout.channel.recv_exit_status()
