@@ -1,20 +1,32 @@
+import os
 import socket
+from time import sleep
 
 import paramiko
 
+DANGEROUS_COMMANDS = ["rm -rf /", "rm -rf .", "rm -rf *", ":(){:|:&};:"]
 
-def send_command(hosts, cmd):
-    for host in hosts:
-        client = paramiko.SSHClient()
+def send_command(host, cmd):
+    results = {}
+    client = paramiko.SSHClient()
+    username = os.getenv("USERNAME_HOST")
+    password = os.getenv("PASSWORD_HOST")
+    key_filename = os.getenv("KEY_PATH")
+    client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    try:
+        client.connect(host, username=username, password=password, key_filename="/home/daniil/.ssh/id_rsa", timeout=10)
+    except Exception as e:
+        return f"Error {e} Invalid Ip {host}"
 
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        try:
-            client.connect(host, username='root', password='marat', key_filename="/home/daniil/.ssh/id_rsa", timeout=10)
-        except Exception as e:
-            return f"Error {e} Invalid Ip {host}"
+    if cmd in DANGEROUS_COMMANDS:
+        return "иди нахуй"
+    stdin, stdout, stderr = client.exec_command(cmd)
 
-        stdin, stdout, stderr = client.exec_command(cmd)
-
-        result = stdout.channel.recv_exit_status()
-        client.close()
-    return result
+    result = stdout.channel.recv_exit_status()
+    results[host] = result
+    client.close()
+    stdin.close()
+    stdout.close()
+    stderr.close()
+    print(host)
+    return results
