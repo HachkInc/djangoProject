@@ -1,17 +1,32 @@
 import os
 
 from django import forms
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
-
+from django.contrib.auth.models import User
 from app.utils import send_command
+from django.contrib.auth.views import LoginView
+from django.urls import reverse_lazy
+from django.contrib import messages
 
 
 class SendCmdForm(forms.Form):
     ipField = forms.CharField(max_length=512, label='Адреса серверов', widget=forms.Textarea)
     cmdField = forms.CharField(max_length=512, label='Команда', widget=forms.Textarea)
 
+
+class MyLoginView(LoginView):
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy('send')
+
+    def form_invalid(self, form):
+        messages.error(self.request, 'Invalid username or password')
+        return self.render_to_response(self.get_context_data(form=form))
 
 @csrf_exempt
 def my_view(request):

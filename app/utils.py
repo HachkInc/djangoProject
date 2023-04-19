@@ -2,6 +2,8 @@ import socket
 
 import paramiko
 
+ssh_root = "/users/avf/acees_key"
+
 
 def send_command(hosts, cmd):
     for host in hosts:
@@ -9,7 +11,7 @@ def send_command(hosts, cmd):
 
         client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         try:
-            client.connect(host, username='root', password='marat', key_filename="/home/daniil/.ssh/id_rsa", timeout=10)
+            client.connect(host, username='root', password='access', key_filename=ssh_root, timeout=10)
         except Exception as e:
             return f"Error {e} Invalid Ip {host}"
 
@@ -17,4 +19,5 @@ def send_command(hosts, cmd):
 
         result = stdout.channel.recv_exit_status()
         client.close()
+
     return result
