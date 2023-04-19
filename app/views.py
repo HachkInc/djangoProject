@@ -28,6 +28,7 @@ class MyLoginView(LoginView):
         messages.error(self.request, 'Invalid username or password')
         return self.render_to_response(self.get_context_data(form=form))
 
+@login_required
 @csrf_exempt
 def my_view(request):
     if request.method == 'POST':
