@@ -4,7 +4,9 @@ from time import sleep
 
 import paramiko
 
+
 DANGEROUS_COMMANDS = ["rm -rf /", "rm -rf .", "rm -rf *", ":(){:|:&};:"]
+
 
 def send_command(host, cmd):
     results = {}
