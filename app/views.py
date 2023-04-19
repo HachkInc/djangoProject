@@ -48,4 +48,4 @@ def my_view(request):
     else:
         form = SendCmdForm()
 
-    return render(request, 'home.html', {'form': form})
+    return render(request, 'index.html', {'form': form})
