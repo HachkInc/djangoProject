@@ -30,5 +30,4 @@ def send_command(host, cmd):
     stdin.close()
     stdout.close()
     stderr.close()
-    print(host)
     return results
